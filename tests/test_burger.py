@@ -71,5 +71,32 @@ class TestBurger:
         # Цена: 2 * 1.5 (булочки) + 1.0 (сыр) + 0.5 (кетчуп) = 4.5
         assert burger.get_price() == 4.5
 
+    def test_get_receipt(self):
+        burger = Burger()
 
+        mock_bun = Mock()
+        mock_bun.get_name.return_value = data.BUN[0][0]
+        mock_bun.get_price.return_value = data.BUN[0][1]
+        burger.bun = mock_bun
+
+        mock_ingredient1 = Mock()
+        mock_ingredient1.get_name.return_value = data.INGREDIENTS[0][1]
+        mock_ingredient1.get_type.return_value = 'соусы'
+        mock_ingredient1.get_price.return_value = data.INGREDIENTS[0][2]
+
+        mock_ingredient2 = Mock()
+        mock_ingredient2.get_name.return_value = data.INGREDIENTS[5][1]
+        mock_ingredient2.get_type.return_value = 'начинки'
+        mock_ingredient2.get_price.return_value = data.INGREDIENTS[5][2]
+
+        mock_ingredient3 = Mock()
+        mock_ingredient3.get_name.return_value = data.INGREDIENTS[7][1]
+        mock_ingredient3.get_type.return_value = 'начинки'
+        mock_ingredient3.get_price.return_value = data.INGREDIENTS[7][2]
+
+        burger.ingredients = [mock_ingredient1, mock_ingredient2, mock_ingredient3]
+        expected_receipt = "(==== pretty bun ====)\n= соусы Соус Spicy-X =\n= начинки Говяжий метеорит (отбивная) =\n= начинки Филе Люминесцентного тетраодонтимформа =\n(==== pretty bun ====)\nPrice: 4476"
+        receipt_text = burger.get_receipt().replace("\n\n", "\n")
+
+        assert receipt_text == expected_receipt
 
